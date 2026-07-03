@@ -11,8 +11,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_face_nova:
-    git:
-      url: https://github.com/facenova/flutter_face_nova.git
+    path: ../
   permission_handler: ^11.4.0
   image_picker: ^1.1.2
   hive_flutter: ^1.1.0
