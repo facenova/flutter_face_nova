@@ -2,6 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'settings_store.dart';
 
+// Brand palette (matches main.dart)
+const _kBlue    = Color(0xFF1565C0);
+const _kIndigo  = Color(0xFF5C6BC0);
+const _kTeal    = Color(0xFF00897B);
+const _kTextPri = Color(0xFF0D1B2A);
+const _kTextSec = Color(0xFF546E7A);
+const _kTextHint= Color(0xFF90A4AE);
+const _kSurface = Color(0xFFF5F7FA);
+const _kBorder  = Color(0xFFE3E8EF);
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -39,10 +49,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         SnackBar(
           content: Text(
             'Reset to ${Platform.isIOS ? "iOS" : "Android"} defaults'
-                ' (Front ${SettingsStore.defaultLivenessThreshold.round()}%,'
-                ' Back ${SettingsStore.defaultBackCameraThreshold.round()}%)',
+            ' — Front ${SettingsStore.defaultLivenessThreshold.round()}%,'
+            ' Back ${SettingsStore.defaultBackCameraThreshold.round()}%',
+            style: const TextStyle(color: Colors.white),
           ),
-          backgroundColor: const Color(0xFF22D37A),
+          backgroundColor: _kBlue,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -52,78 +63,114 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0F1E),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0F1E),
-        foregroundColor: Colors.white,
-        title: const Text('Settings',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+        backgroundColor: Colors.white,
+        foregroundColor: _kTextPri,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 1,
+        title: const Text('Detection Settings',
+            style: TextStyle(
+                color: _kTextPri, fontSize: 17, fontWeight: FontWeight.w700)),
         actions: [
-          TextButton.icon(
-            onPressed: _resetToDefaults,
-            icon: const Icon(Icons.refresh_rounded, size: 18, color: Color(0xFF4D9EFF)),
-            label: Text(
-              'Reset ${Platform.isIOS ? "iOS" : "Android"}',
-              style: const TextStyle(color: Color(0xFF4D9EFF), fontSize: 13),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: OutlinedButton.icon(
+              onPressed: _resetToDefaults,
+              icon: const Icon(Icons.restart_alt_rounded, size: 16),
+              label: const Text('Reset', style: TextStyle(fontSize: 13)),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: _kBlue,
+                side: const BorderSide(color: _kBorder),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              ),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('THRESHOLDS',
-                style: TextStyle(
-                    color: Colors.white38,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.2)),
-            const SizedBox(height: 14),
+            const _SectionLabel('LIVENESS'),
+            const SizedBox(height: 10),
 
-            _ThresholdCard(
-              title: 'Front Camera Liveness',
-              subtitle: 'Minimum liveness score for front (selfie) camera.',
+            _SliderCard(
+              icon: Icons.camera_front_rounded,
+              iconColor: _kIndigo,
+              title: 'Front Camera',
+              subtitle: 'Minimum score for selfie / front camera',
               value: _livenessThreshold,
               min: _minLiveness,
               max: _maxLiveness,
-              minLabel: '${_minLiveness.round()}%  (Lenient)',
-              maxLabel: '${_maxLiveness.round()}%  (Strict)',
-              color: const Color(0xFF4D9EFF),
+              color: _kIndigo,
               onChanged: (v) => setState(() => _livenessThreshold = v),
-              onSave: (v) async => SettingsStore.setLivenessThreshold(v),
+              onSave: (v) => SettingsStore.setLivenessThreshold(v),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
-            _ThresholdCard(
-              title: 'Back Camera Liveness',
-              subtitle: 'Minimum liveness score for back (document/ID) camera.',
+            _SliderCard(
+              icon: Icons.camera_rear_rounded,
+              iconColor: _kTeal,
+              title: 'Back Camera',
+              subtitle: 'Minimum score for back / document camera',
               value: _backCameraThreshold,
               min: _minLiveness,
               max: _maxLiveness,
-              minLabel: '${_minLiveness.round()}%  (Lenient)',
-              maxLabel: '${_maxLiveness.round()}%  (Strict)',
-              color: const Color(0xFFFF9800),
+              color: _kTeal,
               onChanged: (v) => setState(() => _backCameraThreshold = v),
-              onSave: (v) async => SettingsStore.setBackCameraThreshold(v),
+              onSave: (v) => SettingsStore.setBackCameraThreshold(v),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
+            const _SectionLabel('FACE MATCHING'),
+            const SizedBox(height: 10),
 
-            _ThresholdCard(
-              title: 'Face Match Threshold',
-              subtitle: 'Face must match at least this % to pass identity verification.',
+            _SliderCard(
+              icon: Icons.how_to_reg_rounded,
+              iconColor: _kBlue,
+              title: 'Match Confidence',
+              subtitle: 'Minimum similarity % to confirm identity',
               value: _matchThreshold,
               min: _minMatch,
               max: _maxMatch,
-              minLabel: '${_minMatch.round()}%  (Lenient)',
-              maxLabel: '${_maxMatch.round()}%  (Strict)',
-              color: const Color(0xFF22D37A),
+              color: _kBlue,
               onChanged: (v) => setState(() => _matchThreshold = v),
-              onSave: (v) async => SettingsStore.setMatchThreshold(v),
+              onSave: (v) => SettingsStore.setMatchThreshold(v),
+            ),
+
+            const SizedBox(height: 28),
+
+            // Info note
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: _kBlue.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: _kBlue.withValues(alpha: 0.15)),
+              ),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline_rounded, size: 16, color: _kBlue),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Higher values are stricter — they reduce false positives '
+                      'but may reject genuine users in poor lighting. '
+                      'Lower values are more lenient.',
+                      style: TextStyle(
+                          color: _kTextSec, fontSize: 12, height: 1.5),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -132,26 +179,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-class _ThresholdCard extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────────────────────
+// Section label
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  const _SectionLabel(this.text);
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        style: const TextStyle(
+            color: _kTextHint,
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.3));
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Slider card
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _SliderCard extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
   final String title;
   final String subtitle;
   final double value;
   final double min;
   final double max;
-  final String minLabel;
-  final String maxLabel;
   final Color color;
   final ValueChanged<double> onChanged;
   final ValueChanged<double> onSave;
 
-  const _ThresholdCard({
+  const _SliderCard({
+    required this.icon,
+    required this.iconColor,
     required this.title,
     required this.subtitle,
     required this.value,
     required this.min,
     required this.max,
-    required this.minLabel,
-    required this.maxLabel,
     required this.color,
     required this.onChanged,
     required this.onSave,
@@ -159,74 +228,113 @@ class _ThresholdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pct = value / max;
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: color.withValues(alpha: 0.4)),
-                ),
-                child: Text(
-                  '${value.round()}%',
-                  style: TextStyle(
-                      color: color,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(subtitle,
-              style: const TextStyle(color: Colors.white38, fontSize: 12)),
-          const SizedBox(height: 14),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: color,
-              inactiveTrackColor: Colors.white12,
-              thumbColor: color,
-              overlayColor: color.withValues(alpha: 0.15),
-              trackHeight: 6,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-            ),
-            child: Slider(
-              value: value,
-              min: min,
-              max: max,
-              divisions: (max - min).round(),
-              onChanged: onChanged,
-              onChangeEnd: onSave,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(minLabel,
-                  style: const TextStyle(color: Colors.white24, fontSize: 11)),
-              Text(maxLabel,
-                  style: const TextStyle(color: Colors.white24, fontSize: 11)),
-            ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _kBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // Title row
+        Row(children: [
+          Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 18, color: iconColor),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title,
+                  style: const TextStyle(
+                      color: _kTextPri,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700)),
+              const SizedBox(height: 1),
+              Text(subtitle,
+                  style: const TextStyle(color: _kTextHint, fontSize: 11)),
+            ]),
+          ),
+          // Value badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '${value.round()}%',
+              style: TextStyle(
+                  color: color,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800),
+            ),
+          ),
+        ]),
+
+        const SizedBox(height: 14),
+
+        // Progress bar (visual indicator above slider)
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: (value - min) / (max - min),
+            minHeight: 4,
+            backgroundColor: _kSurface,
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+          ),
+        ),
+
+        const SizedBox(height: 2),
+
+        // Slider
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: color,
+            inactiveTrackColor: _kSurface,
+            thumbColor: color,
+            overlayColor: color.withValues(alpha: 0.12),
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 9),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
+          ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: (max - min).round(),
+            onChanged: onChanged,
+            onChangeEnd: onSave,
+          ),
+        ),
+
+        // Min / Max labels
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${min.round()}%  Lenient',
+                  style: const TextStyle(color: _kTextHint, fontSize: 10)),
+              Text('${max.round()}%  Strict',
+                  style: const TextStyle(color: _kTextHint, fontSize: 10)),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }
