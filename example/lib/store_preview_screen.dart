@@ -93,7 +93,7 @@ class _StorePreviewScreenState extends State<StorePreviewScreen> {
                         ),
                         SizedBox(height: 3),
                         Text(
-                          'FaceNova Teams',
+                          'FaceNova Labs',
                           style: TextStyle(color: Color(0xFF22D37A), fontSize: 13),
                         ),
                         SizedBox(height: 8),

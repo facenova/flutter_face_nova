@@ -9,7 +9,7 @@ class SettingsStore {
   // Mirror the package-side platform defaults
   static double get defaultLivenessThreshold   => Platform.isIOS ? 60.0 : 30.0;
   static double get defaultBackCameraThreshold => Platform.isIOS ? 90.0 : 80.0;
-  static const double defaultMatchThreshold    = 50.0;
+  static const double defaultMatchThreshold    = 70.0;
 
   static SharedPreferences? _prefs;
 

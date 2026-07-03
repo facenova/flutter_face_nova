@@ -11,7 +11,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_face_nova:
-    path: ../
+    git:
+      url: https://github.com/facenova/flutter_face_nova.git
   permission_handler: ^11.4.0
   image_picker: ^1.1.2
   hive_flutter: ^1.1.0
@@ -27,3 +28,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/screenshots/
+    - assets/icon/
