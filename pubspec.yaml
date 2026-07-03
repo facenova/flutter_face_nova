@@ -1,0 +1,38 @@
+name: flutter_face_nova
+description: "Offline, on-device Flutter SDK for face liveness detection and identity verification. No server required."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  camera: ^0.11.0+2
+  permission_handler: ^11.4.0
+  google_mlkit_face_detection: ^0.12.0
+  image: ^4.5.4
+  onnxruntime: ^1.4.1
+  path_provider: ^2.1.5
+  screen_brightness: ^1.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets: []
+
+  plugin:
+    platforms:
+      android:
+        package: com.example.flutter_face_nova
+        pluginClass: LivenessFlutterPlugin
+      ios:
+        pluginClass: LivenessFlutterPlugin
