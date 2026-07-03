@@ -1,3 +1,7 @@
+## 1.0.0+2
+
+- Fix README screenshots for pub.dev display
+
 ## 1.0.0+1
 
 - Initial release

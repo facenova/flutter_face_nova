@@ -1,6 +1,6 @@
 name: flutter_face_nova
 description: "Offline, on-device Flutter SDK for face liveness detection and identity verification. No server. No internet required."
-version: 1.0.0+1
+version: 1.0.0+2
 
 homepage: https://github.com/facenova/flutter_face_nova
 repository: https://github.com/facenova/flutter_face_nova

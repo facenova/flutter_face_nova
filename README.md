@@ -4,10 +4,10 @@
 > No server. No internet. All AI inference runs fully on-device.
 
 <p align="left">
-  <img src="screenshots/1.jpg" width="200"/>
-  <img src="screenshots/2.jpg" width="200"/>
-  <img src="screenshots/3.jpg" width="200"/>
-  <img src="screenshots/4.jpg" width="200"/>
+  <img src="https://raw.githubusercontent.com/facenova/flutter_face_nova/main/screenshots/1.jpg" width="200"/>
+  <img src="https://raw.githubusercontent.com/facenova/flutter_face_nova/main/screenshots/2.jpg" width="200"/>
+  <img src="https://raw.githubusercontent.com/facenova/flutter_face_nova/main/screenshots/3.jpg" width="200"/>
+  <img src="https://raw.githubusercontent.com/facenova/flutter_face_nova/main/screenshots/4.jpg" width="200"/>
 </p>
 
 ---
