@@ -1,3 +1,10 @@
+## 1.0.1
+
+- Relaxed dependency constraints for broader Flutter app compatibility
+- `sdk` changed from `^3.11.0` to `>=3.4.0 <4.0.0` — works with Flutter 3.x / Dart 3.4+
+- `image` changed from `^4.5.4` to `^4.1.7` — compatible with `excel`, `youtube_explode_dart`, and other common packages
+- `camera` changed from `^0.11.0+2` to `^0.10.6`
+
 ## 1.0.0+2
 
 - Fix README screenshots for pub.dev display
