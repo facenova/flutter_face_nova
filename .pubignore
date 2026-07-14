@@ -1,0 +1,8 @@
+android_sdk/
+ios_sdk/
+flutter_sdk/
+screenshots/
+do not share/
+.idea/
+.vscode/
+*.iml
